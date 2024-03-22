@@ -1,7 +1,6 @@
-from collections.abc import Iterable
+''' The matrix games implementations '''
 import numpy as np
-import gym
-
+import gymnasium as gym
 
 def actions_to_onehot(num_actions, actions):
     """
@@ -17,6 +16,7 @@ def actions_to_onehot(num_actions, actions):
 
 
 class MatrixGame(gym.Env):
+    ''' The matrix game environment class for the basic matrix games '''
     def __init__(self, payoff_matrix, ep_length, last_action_state=True):
         """
         Create matrix game
@@ -53,16 +53,17 @@ class MatrixGame(gym.Env):
         else:
             return tuple([np.array(self.n_agents * [0])] * self.n_agents)
 
-    def reset(self):
+    def reset(self, seed: int=10, options: dict=None):
+        ''' Resets the environment '''
         self.t = 0
         # self.last_actions = actions_to_onehot(self.num_actions, [0] * self.n_agents)
 
-        return self._make_obs()
+        return self._make_obs(), {}
 
     def step(self, action):
         self.t += 1
         self.last_actions = actions_to_onehot(self.num_actions, action)
-        reward = self.payoff
+        # reward = self.payoff
 
         rewards = [0 for _ in range(len(action))]
         for i in range(len(action)):
@@ -76,7 +77,7 @@ class MatrixGame(gym.Env):
         else:
             done = False
 
-        return self._make_obs(), rewards, [done] * self.n_agents, {}
+        return self._make_obs(), rewards, [done] * self.n_agents, {}, {}
 
     def render(self):
         print(f"Step {self.t}:")
@@ -85,6 +86,7 @@ class MatrixGame(gym.Env):
 
 
 class TwoStep(gym.Env):
+    ''' The two step matrix game environment class for the basic matrix games '''
     def __init__(self, payoff_matrix1, payoff_matrix2):
         self.payoff1 = payoff_matrix1
         self.payoff2 = payoff_matrix1
@@ -116,14 +118,15 @@ class TwoStep(gym.Env):
             x = [0, 0, 1]
         return tuple([np.array(x)] * self.n_agents)
 
-    def reset(self):
+    def reset(self, seed: int=10, options: dict=None):
+        ''' Resets the environment '''
         self.state = "A"
         self.t = 0
         # self.last_actions = actions_to_onehot(self.num_actions, [0] * self.n_agents)
         self.matrix1.reset()
         self.matrix2.reset()
 
-        return self._make_obs()
+        return self._make_obs(), {}
 
     def step(self, action):
         if self.t == 0:
@@ -134,9 +137,9 @@ class TwoStep(gym.Env):
             rewards = self.n_agents * [0]
         elif self.t == 1:
             if self.state == "2A":
-                _, rewards, _, _ = self.matrix1.step(action)
+                _, rewards, _, _, _ = self.matrix1.step(action)
             elif self.state == "2B":
-                _, rewards, _, _ = self.matrix2.step(action)
+                _, rewards, _, _, _ = self.matrix2.step(action)
         else:
             rewards = self.n_agents * [0]
 
@@ -147,11 +150,15 @@ class TwoStep(gym.Env):
 
         self.t += 1
 
-        return self._make_obs(), rewards, [done] * self.n_agents, {}
+        return self._make_obs(), rewards, [done] * self.n_agents, {}, {}
+
+    def render(self):
+        pass
 
 
 # penalty game
 def create_penalty_game(penalty, ep_length, last_action_state=True):
+    ''' Creates the penalty game '''
     assert penalty <= 0
     payoff = [
         [penalty, 0, 10],
@@ -164,6 +171,7 @@ def create_penalty_game(penalty, ep_length, last_action_state=True):
 
 # climbing game
 def create_climbing_game(ep_length, last_action_state=True):
+    ''' Creates the climbing game '''
     payoff = [
         [11, -30, 0],
         [-30, 7, 0],

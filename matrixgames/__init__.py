@@ -1,4 +1,5 @@
-from gym import register
+''' Registers all of the envs for this domain '''
+from gymnasium import register
 import numpy as np
 
 for k in (0, 25, 50, 75, 100):

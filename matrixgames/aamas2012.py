@@ -1,5 +1,6 @@
 """
-A collection of games from comparative Evaluation of Multiagent Learning Algorithms in a Diverse Set of Ad Hoc Team Problems (https://arxiv.org/abs/1907.09189)
+A collection of games from comparative Evaluation of Multiagent Learning Algorithms 
+in a Diverse Set of Ad Hoc Team Problems (https://arxiv.org/abs/1907.09189)
 """
 
 # conflict games:
