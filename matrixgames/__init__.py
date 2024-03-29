@@ -15,7 +15,7 @@ for k in (0, 25, 50, 75, 100):
         kwargs={
             "payoff_matrix": _payoff,
             # "ep_length": 1000,
-            "ep_length": 10,
+            "ep_length": 100,
             "last_action_state": False,
         },
     )
@@ -25,7 +25,7 @@ for k in (0, 25, 50, 75, 100):
         kwargs={
             "payoff_matrix": _payoff,
             # "ep_length": 1000,
-            "ep_length": 10,
+            "ep_length": 100,
             "last_action_state": True,
         },
     )
